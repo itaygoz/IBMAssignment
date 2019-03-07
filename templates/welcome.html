@@ -1,6 +1,17 @@
 {% extends "login.html" %}
 {% block title %}Welcome{% endblock %}
+<!--<head>-->
 <link rel="stylesheet" href="/static/style.css" type="text/css">
+<!--<script>-->
+<!--function validateForm() {-->
+<!--var x = document.forms["edit_form"]["password"].value;-->
+<!--if (x == "") {-->
+<!--alert("Password must be filled out");-->
+<!--return false;-->
+<!--}-->
+<!--}-->
+<!--</script>-->
+<!--</head>-->
 {% block body %}
 {% if session['logged_in'] %}
 <a href="/logout" class="btn btn-primary btn-large btn-block cancel logout"
@@ -24,7 +35,7 @@
             {% endif %}
         </div>
         {% if not session['edit'] %}
-        <form action="/edit_user" method="POST">
+        <form name="edit_form" action="/edit_user" method="POST">
             {% else %}
             <form action="/admin_successful_edited" method="POST">
                 <input type="hidden" value="{{userid}}" name="id">
@@ -49,7 +60,7 @@
                     </div>
                     <div class="control-group">
                         <label class="login-field-icon fui-lock" for="login-pass">Password</label>
-                        <input type="password" class="login-field" value="{{user_info.password}}" placeholder="Password" name="password">
+                        <input type="password" class="login-field" placeholder="Password" name="password" required>
                     </div>
                     {% if ((session['edit']) and (session['user_id'] != userid)) %}
                     <div class="control-group">

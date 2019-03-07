@@ -1,7 +1,7 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import os
-from flask.helpers import make_response
 from sqlalchemy.orm import sessionmaker
+from werkzeug.security import generate_password_hash, check_password_hash
 from tabledef import *
 
 engine = create_engine('mysql+pymysql://root:''@localhost/test', echo=True)
@@ -30,10 +30,11 @@ def do_login():
 
     Session = sessionmaker(bind=engine)
     s = Session()
-    query = s.query(User).filter(User.username.in_([POST_USERNAME]), User.password.in_([POST_PASSWORD]))
+    query = s.query(User).filter(User.username.in_([POST_USERNAME]))
     result = query.first()
 
-    if result:
+
+    if check_password_hash(result.password, POST_PASSWORD):
         session['logged_in'] = True
         session['user_id'] = result.id
         user_dic = s.query(User).get(session['user_id']).to_dict()
@@ -60,7 +61,7 @@ def edit_profile():
     user.lastname = str(request.form['lastname'])
     user.email = str(request.form['email'])
     user.username = str(request.form['username'])
-    user.password = str(request.form['password'])
+    user.password = generate_password_hash(str(request.form['password']))
     user.firstlogin = False
 
     s.commit()
@@ -100,7 +101,7 @@ def successful_edited():
     user.lastname = str(request.form['lastname'])
     user.email = str(request.form['email'])
     user.username = str(request.form['username'])
-    user.password = str(request.form['password'])
+    user.password = generate_password_hash(str(request.form['password']))
     user.admin = 'admin' in request.form
     user.firstlogin = False
 
