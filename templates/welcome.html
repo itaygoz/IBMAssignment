@@ -1,0 +1,83 @@
+{% extends "login.html" %}
+{% block title %}Welcome{% endblock %}
+<link rel="stylesheet" href="/static/style.css" type="text/css">
+{% block body %}
+{% if session['logged_in'] %}
+<a href="/logout" class="btn btn-primary btn-large btn-block cancel logout"
+   style="text-align: center;width: 10%;float: left;margin-block-start: 20px;">Logout</a>
+
+<div class="welcome">
+    <div class="login-screen">
+        <div class="app-title">
+
+            <h1>Edit your profile</h1>
+            <div><h2>Welcome, {{user_info.username}}</h2></div>
+            {% if user_info.firstlogin %}
+            <div class="warning">
+                <p><strong>Warning!</strong> You haven't change your password yet!</p>
+            </div>
+            {% endif %}
+            {% if edited %}
+            <div class="success">
+                <p><strong>Success!</strong> You've edited your profile successfully!</p>
+            </div>
+            {% endif %}
+        </div>
+        {% if not session['edit'] %}
+        <form action="/edit_user" method="POST">
+            {% else %}
+            <form action="/admin_successful_edited" method="POST">
+                <input type="hidden" value="{{userid}}" name="id">
+                {% endif %}
+                <div class="login-form">
+
+                    <div class="control-group">
+                        <label class="login-field-icon fui-user" for="first-name">First Name</label>
+                        <input type="text" class="login-field" value="{{user_info.firstname}}" name="firstname">
+                    </div>
+                    <div class="control-group">
+                        <label class="login-field-icon fui-user" for="last-name">Last Name</label>
+                        <input type="text" class="login-field" value="{{user_info.lastname}}" name="lastname">
+                    </div>
+                    <div class="control-group">
+                        <label class="login-field-icon fui-user" for="email">Email</label>
+                        <input type="email" class="login-field" value="{{user_info.email}}" name="email">
+                    </div>
+                    <div class="control-group">
+                        <label class="login-field-icon fui-user" for="user-name">User Name</label>
+                        <input type="text" class="login-field" value="{{user_info.username}}" name="username">
+                    </div>
+                    <div class="control-group">
+                        <label class="login-field-icon fui-lock" for="login-pass">Password</label>
+                        <input type="password" class="login-field" value="{{user_info.password}}" placeholder="Password" name="password">
+                    </div>
+                    {% if ((session['edit']) and (session['user_id'] != userid)) %}
+                    <div class="control-group">
+                        <label class="login-field-icon fui-lock" for="login-pass">Make Admin</label>
+                        <input type="checkbox" class="login-field" value="{{user_info.admin}}" placeholder="Yes/No" name="admin">
+                    </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <input type="submit" value="Apply" class="btn btn-primary btn-large btn-block">
+                    <br>
+                    <input type="reset" value="Cancel" class="btn btn-primary btn-large btn-block cancel">
+                </div>
+            </form>
+            <form action="/admin_panel" method="POST">
+                {% if session['admin'] %}
+                <br>
+                <input type="submit" value="Admin Panel" class="btn btn-primary btn-large btn-block admin">
+                {% endif %}
+            </form>
+    </div>
+</div>
+
+
+{% else %}
+
+You have to login first!
+
+
+{% endif %}
+{% endblock %}

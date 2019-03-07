@@ -1,0 +1,51 @@
+{% extends "login.html" %}
+{% block title %}Admin area{% endblock %}
+<link rel="stylesheet" href="/static/style.css" type="text/css">
+{% block body %}
+{% if session['admin'] %}
+
+<a href="/logout" class="btn btn-primary btn-large btn-block cancel logout"
+   style="text-align: center;width: 10%;float: left;margin-block-start: 20px;">Logout</a>
+
+<div class="welcome">
+    <div class="login-screen">
+        <div class="app-title">
+            <h1>Admin Panel</h1>
+            {% if msg %}
+            <div class="success">
+                <p><strong>Success!</strong> {{msg}} </p>
+            </div>
+            {% endif %}
+        </div>
+        <form action="/admin_edit" method="POST">
+            <div >
+                <div class="login-form">
+                    <label class="login-field-icon fui-user">Choose user</label>
+                    <select name="users" class="form-control">
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.username }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" value="Edit User" class="btn btn-primary btn-large btn-block"
+                           style="display: inline-block;">
+                </div>
+            </div>
+        </form>
+        <form action="/register" method="POST">
+            <div>
+                <input type="submit" value="Add User" class="btn btn-primary btn-large btn-block admin">
+            </div>
+        </form>
+        <div>
+            <a href="/" class="btn btn-primary btn-large btn-block" style="text-align: center;">Home</a>
+        </div>
+    </div>
+</div>
+
+
+{% else %}
+
+<h1 class="warning">You have to be admin!</h1>
+{% endif %}
+
+{% endblock %}
