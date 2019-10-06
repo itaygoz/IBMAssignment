@@ -1,4 +1,4 @@
-# IBMAssignment
+# Web User Management
 
 A web application that manages logins and allows users to edit their data
 
